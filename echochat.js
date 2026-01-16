@@ -1,8 +1,8 @@
-// Cloud Run の URL（自分の環境に合わせて変更）
-// 例: "https://echo-api-986862757498.europe-west1.run.app"
-const API_BASE_URL = "https://echo-api-986862757498.europe-west1.run.app";
+// Cloud Run の API URL（自分の環境に合わせて変更）
+const API_BASE_URL =
+  "https://echo-api-986862757498.europe-west1.run.app";
 
-// 関数は / で受けている前提（必要なら "/echo" などに変更）
+// 今回はルート（/）で受けている
 const API_URL = API_BASE_URL;
 
 const inputEl = document.getElementById("userInput");
@@ -23,17 +23,25 @@ async function sendMessage() {
   try {
     const response = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: text,   // ← API 側と一致
+      }),
     });
 
     if (!response.ok) {
       throw new Error("HTTP error: " + response.status);
     }
 
+    // ★ JSON ではなく「文字列」として受け取る
     const resultText = await response.text();
     responseArea.textContent = resultText;
+
   } catch (error) {
-    responseArea.textContent = "エラーが発生しました\n" + error.message;
+    responseArea.textContent =
+      "エラーが発生しました\n" + error.message;
   }
 }
+
